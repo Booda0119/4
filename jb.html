@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en" manifest="cache.appcache">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AJZA ALHASB JAILBREAK 0558028009</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background-image: url("image.png");
+        background-size: cover;
+        color: #313232;
+        font:
+          15px/1.45 "Segoe UI",
+          system-ui,
+          sans-serif;
+      }
+      #brand {
+        text-align: center;
+      }
+      #brand b {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: #2c2d2d;
+        vertical-align: middle;
+      }
+
+      /* running: a spinner under the brand. jb.js sets body.done / body.fail / body.log. */
+      #spin {
+        position: fixed;
+        top: calc(50% + 20px);
+        left: 50%;
+        width: 46px;
+        height: 46px;
+        margin: -23px 0 0 -23px;
+        border: 4px solid #1e2732;
+        border-top-color: #7fd0a0;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #msg {
+        position: fixed;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        text-align: center;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+        display: none;
+      }
+      #wrap {
+        padding: 0;
+      }
+      #state,
+      #out {
+        display: none;
+      }
+
+      body.done #spin {
+        display: none;
+      }
+      body.fail #spin {
+        display: none;
+      }
+      body.fail #msg {
+        display: block;
+      }
+      body.done #msg {
+        display: block;
+        color: #7fd0a0;
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+
+      /* ?log=1 -- the full step log, styled like the landing. */
+      body.log #spin,
+      body.log #msg {
+        display: none;
+      }
+      body.log #wrap {
+        padding: 14px 18px;
+      }
+      body.log #state {
+        display: block;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 8px;
+      }
+      body.log #out {
+        display: block;
+        white-space: pre-wrap;
+        font:
+          12px/1.45 Consolas,
+          monospace;
+        background: #11151b;
+        border: 1px solid #1e2732;
+        border-radius: 5px;
+        padding: 10px 12px;
+        height: calc(100vh - 141px);
+        overflow-y: auto;
+      }
+      .ok {
+        color: #7fd0a0;
+      }
+      .bad {
+        color: #d08a7f;
+      }
+      .warn {
+        color: #d8c07f;
+      }
+      .safe {
+        color: #7fd0a0;
+      }
+      .danger {
+        color: #d08a7f;
+      }
+      code {
+        color: #9fb3d0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="brand">
+    <b>AJZA ALHASB JAILBREAK</b>
+    </div>
+    <div id="spin"></div>
+    <div id="msg">Restart your console</div>
+    <div id="wrap">
+      <div id="state"></div>
+      <div id="out"></div>
+    </div>
+    <script type="module">
+      import "./jb.js?v=19";
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+<div class="loader-wrapper">
+  <!-- شريط التحميل -->
+  <div class="top-loading-container" id="loading-container">
+    <div class="top-loading-bar"></div>
+  </div>
+  <!-- حاوية النتيجة -->
+  <div id="loading-result" class="result-message"></div>
+</div>
+
+<style>
+  /* الحاوية الرئيسية لتثبيت العناصر في أعلى المنتصف */
+  .loader-wrapper {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    text-align: center;
+    font-family: sans-serif;
+  }
+
+  /* حاوية شريط التحميل */
+  .top-loading-container {
+    width: 200px;
+    height: 4px;
+    background-color: #313030;
+    overflow: hidden;
+    border-radius: 2px;
+    transition: opacity 0.3s ease;
+  }
+
+  /* شريط التحميل الداخلي */
+  .top-loading-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #1ccb88;
+    transform: translateX(-100%);
+    animation: progressLoader 25s linear forwards;
+  }
+
+  /* التنسيق العام لرسالة النتيجة */
+  .result-message {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* تنسيق خاص في حال النجاح (أخضر) */
+  .result-message.success {
+    color: #159c68;
+    opacity: 1;
+  }
+
+  /* تنسيق خاص في حال الفشل (أحمر) */
+  .result-message.fail {
+    color: #b03131;
+    opacity: 1;
+  }
+
+  @keyframes progressLoader {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(0); }
+  }
+</style>
+
+<script>
+  const resultElement = document.getElementById("loading-result");
+  const containerElement = document.getElementById("loading-container");
+  let isFinished = false; // متغير لمنع تداخل الرسائل
+
+  // دالة إظهار الفشل الفوري
+  function triggerFailure() {
+    if (isFinished) return;
+    isFinished = true;
+    
+    // إخفاء شريط التحميل فوراً
+    containerElement.style.display = 'none'; 
+    
+    // إظهار رسالة الفشل
+    resultElement.textContent = "فشل تفعيل جولد هين... أعد تشغيل البلايستيشن وحاول مرة أخرى";
+    resultElement.className = "result-message fail";
+    
+    // إيقاف المراقبة والمؤقت
+    observer.disconnect();
+    clearTimeout(successTimeout);
+  }
+
+  // 1. مراقبة الصفحة لحظياً للبحث عن جملة الفشل
+  const observer = new MutationObserver((mutations) => {
+    const pageText = document.body.innerText || document.body.textContent;
+    if (pageText.includes("Restart your console")) {
+      triggerFailure();
+    }
+  });
+
+  // بدء مراقبة التغييرات في كامل الصفحة
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+  // فحص أولي سريع في حال كانت الجملة موجودة بالفعل عند تحميل الكود
+  if ((document.body.innerText || document.body.textContent).includes("Restart your console")) {
+    triggerFailure();
+  }
+
+  // 2. مؤقت النجاح (يعمل فقط إذا مرت 25 ثانية بدون ظهور جملة الفشل)
+  const successTimeout = setTimeout(function() {
+    if (isFinished) return;
+    isFinished = true;
+
+    // إخفاء شريط التحميل
+    containerElement.style.opacity = '0';
+    setTimeout(() => containerElement.style.display = 'none', 300);
+
+    // إظهار رسالة النجاح
+    resultElement.textContent = "تم تفعيل جولد هين بنجاح! يمكنك الآن إغلاق المتصفح";
+    resultElement.className = "result-message success";
+
+    // إيقاف المراقبة
+    observer.disconnect();
+  }, 25000); // 25 ثانية
+</script>
+
+
