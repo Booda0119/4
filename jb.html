@@ -152,9 +152,7 @@
 
 
 
-
-<div class="loader-wrapper">
-  <!-- شريط التحميل -->
+<div class="loader-wrapper"> <!-- شريط التحميل -->
   <div class="top-loading-container" id="loading-container">
     <div class="top-loading-bar" id="loading-bar"></div>
   </div>
@@ -163,136 +161,137 @@
 </div>
 
 <style>
-  /* الحاوية الرئيسية لتثبيت العناصر في أعلى المنتصف */
-  .loader-wrapper {
-    position: fixed;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    text-align: center;
-    font-family: sans-serif;
-  }
+/* الحاوية الرئيسية لتثبيت العناصر في أعلى المنتصف */
+.loader-wrapper {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  text-align: center;
+  font-family: sans-serif;
+}
 
-  /* حاوية شريط التحميل */
-  .top-loading-container {
-    width: 200px;
-    height: 4px;
-    background-color: #313030;
-    overflow: hidden;
-    border-radius: 2px;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
+/* حاوية شريط التحميل */
+.top-loading-container {
+  width: 200px;
+  height: 4px;
+  background-color: #313030;
+  overflow: hidden;
+  border-radius: 2px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
 
-  /* شريط التحميل الداخلي (تم تعديله ليتحرك بشكل مستمر ونبضي لحين الاستجابة) */
-  .top-loading-bar {
-    width: 70%;
-    height: 100%;
-    background-color: #1ccb88;
-    animation: progressLoader 1.5s infinite ease-in-out;
-  }
+/* شريط التحميل الداخلي (تم إبطاء الحركة هنا إلى 5 ثوانٍ) */
+.top-loading-bar {
+  width: 100%;
+  height: 100%;
+  background-color: #1ccb88;
+  /* تم التغيير إلى 5s لجعل الحركة أبطأ وسلسة */
+  animation: progressLoader 10s ease-out forwards; 
+}
 
-  /* التنسيق العام لرسالة النتيجة */
-  .result-message {
-    font-size: 25px;
-    font-weight: bold;
-    margin-top: 10px;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
+/* التنسيق العام لرسالة النتيجة */
+.result-message {
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 10px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
 
-  /* تنسيق خاص في حال النجاح (أخضر) */
-  .result-message.success {
-    color: #159c68;
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* تنسيق خاص في حال النجاح (أخضر) */
+.result-message.success {
+  color: #159c68;
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  /* تنسيق خاص في حال الفشل (أحمر) */
-  .result-message.fail {
-    color: #b03131;
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* تنسيق خاص في حال الفشل (أحمر) */
+.result-message.fail {
+  color: #b03131;
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  /* حركة تكرارية انسيابية للشريط */
-  @keyframes progressLoader {
-    0% { transform: translateX(-150%); }
-    50% { transform: translateX(100%); }
-    100% { transform: translateX(150%); }
+/* حركة التعبئة من اليسار لليمين */
+@keyframes progressLoader {
+  0% {
+    transform: translateX(-100%);
   }
+  100% {
+    transform: translateX(0%);
+  }
+}
 </style>
 
 <script>
-  const resultElement = document.getElementById("loading-result");
-  const containerElement = document.getElementById("loading-container");
-  const barElement = document.getElementById("loading-bar");
-  let isFinished = false;
+const resultElement = document.getElementById("loading-result");
+const containerElement = document.getElementById("loading-container");
+const barElement = document.getElementById("loading-bar");
+let isFinished = false;
 
-  // دالة إخفاء شريط التحميل بشكل ناعم
-  function hideLoader() {
-    containerElement.style.opacity = '0';
-    containerElement.style.transform = 'scaleY(0)';
-    barElement.style.animationPlayState = 'paused'; 
-    setTimeout(() => {
-      containerElement.style.display = 'none';
-    }, 300);
+// دالة إخفاء شريط التحميل بشكل ناعم
+function hideLoader() {
+  containerElement.style.opacity = '0';
+  containerElement.style.transform = 'scaleY(0)';
+  barElement.style.animationPlayState = 'paused';
+  setTimeout(() => {
+    containerElement.style.display = 'none';
+  }, 300);
+}
+
+// دالة إظهار الفشل
+function triggerFailure() {
+  if (isFinished) return;
+  isFinished = true;
+  hideLoader();
+  resultElement.textContent = "فشل تفعيل جولد هين... أعد تشغيل البلايستيشن وحاول مرة أخرى";
+  resultElement.classList.add("fail");
+  observer.disconnect();
+}
+
+// دالة إظهار النجاح اللحظي
+function triggerSuccess() {
+  if (isFinished) return;
+  isFinished = true;
+  hideLoader();
+  resultElement.textContent = "تم تفعيل جولد هين بنجاح! يمكنك الآن إغلاق المتصفح";
+  resultElement.classList.add("success");
+  observer.disconnect();
+}
+
+// دالة لفحص محتوى الصفحة والبحث عن الكلمات المفتاحية
+function checkPageText() {
+  const pageText = (document.body.innerText || document.body.textContent).toLowerCase();
+
+  // الفحص عن الفشل
+  if (pageText.includes("restart your console")) {
+    triggerFailure();
+    return true;
   }
 
-  // دالة إظهار الفشل
-  function triggerFailure() {
-    if (isFinished) return;
-    isFinished = true;
-    hideLoader();
-    resultElement.textContent = "فشل تفعيل جولد هين... أعد تشغيل البلايستيشن وحاول مرة أخرى";
-    resultElement.classList.add("fail");
-    observer.disconnect();
+  // الفحص عن النجاح (done)
+  if (pageText.includes("done")) {
+    triggerSuccess();
+    return true;
   }
+  return false;
+}
 
-  // دالة إظهار النجاح اللحظي
-  function triggerSuccess() {
-    if (isFinished) return;
-    isFinished = true;
-    hideLoader();
-    resultElement.textContent = "تم تفعيل جولد هين بنجاح! يمكنك الآن إغلاق المتصفح";
-    resultElement.classList.add("success");
-    observer.disconnect();
-  }
-
-  // دالة لفحص محتوى الصفحة والبحث عن الكلمات المفتاحية
-  function checkPageText() {
-    const pageText = (document.body.innerText || document.body.textContent).toLowerCase();
-    
-    // الفحص عن الفشل
-    if (pageText.includes("restart your console")) {
-      triggerFailure();
-      return true;
+// مراقبة الصفحة لحظياً فور حدوث أي تغيير في النصوص
+const observer = new MutationObserver((mutations) => {
+  for (let mutation of mutations) {
+    if (mutation.type === 'childList' || mutation.type === 'characterData') {
+      if (checkPageText()) break;
     }
-    
-    // الفحص عن النجاح (done)
-    if (pageText.includes("done")) {
-      triggerSuccess();
-      return true;
-    }
-    
-    return false;
   }
+});
 
-  // مراقبة الصفحة لحظياً فور حدوث أي تغيير في النصوص
-  const observer = new MutationObserver((mutations) => {
-    for (let mutation of mutations) {
-      if (mutation.type === 'childList' || mutation.type === 'characterData') {
-        if (checkPageText()) break;
-      }
-    }
-  });
+// بدء مراقبة التغييرات
+observer.observe(document.body, { childList: true, subtree: true, characterData: true });
 
-  // بدء مراقبة التغييرات
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
-
-  // فحص أولي سريع عند تشغيل الكود مباشرة
-  checkPageText();
+// فحص أولي سريع عند تشغيل الكود مباشرة
+checkPageText();
 </script>
-
-
